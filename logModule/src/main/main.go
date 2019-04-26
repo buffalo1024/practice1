@@ -11,6 +11,7 @@ import (
 func main() {
 	http.HandleFunc("/printdata", webServices.PrintData)
 	http.HandleFunc("/", webServices.Login)
+	http.HandleFunc("/signup", webServices.SignUp)
 	err := http.ListenAndServe(":9090",nil)
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
