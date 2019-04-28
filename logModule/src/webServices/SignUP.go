@@ -2,10 +2,11 @@ package webServices
 
 import (
 	"../dbUtils"
-	"net/http"
+	"github.com/gin-gonic/gin"
 )
 
-func SignUp(w http.ResponseWriter, r *http.Request)  {
+func SignUp(c *gin.Context)  {
+	r := c.Request
 	r.ParseForm()
 	username := r.Form["username"][0]
 	password := r.Form["password"][0]

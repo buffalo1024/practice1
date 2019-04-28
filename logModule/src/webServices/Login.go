@@ -3,10 +3,12 @@ package webServices
 import (
 	"../dbUtils"
 	"fmt"
-	"net/http"
+	"github.com/gin-gonic/gin"
 )
 
-func Login(w http.ResponseWriter, r *http.Request) {
+func Login(c *gin.Context) {
+	r := c.Request
+	w := c.Writer
 	r.ParseForm()
 	//fmt.Println("method: ", r.Method)
 	//fmt.Println("url: ",r.URL)
@@ -26,5 +28,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	//fmt.Println("password: ", r.Form["password"])
 	var username string
 	username = r.Form["username"][0]
-	fmt.Println(r.Form["password"][0]==dbUtils.QueryPassword(username))
+	//fmt.Println(r.Form["password"][0]==dbUtils.QueryPassword(username))
+	success := fmt.Sprintf("%v", r.Form["password"][0]==dbUtils.QueryPassword(username))
+	w.Write([]byte(success))
 }
