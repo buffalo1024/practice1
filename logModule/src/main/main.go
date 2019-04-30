@@ -1,14 +1,38 @@
 package main
 
 import (
+	"../config"
+	"../middlewares"
+	"../utils"
 	"../webServices"
+	"flag"
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
+	"log"
 )
 
 
+var (
+	tomlFile = flag.String("config", "E:/LogAuthenticion/logModule/src/docs/doc.toml", "config file")
+)
+
+func init() {
+	gin.SetMode(gin.ReleaseMode)
+}
+
 func main() {
-	router := gin.Default()
+	flag.Parse()
+	tomlConfig, err := config.UnmarshalConfig(*tomlFile)
+	if err != nil {
+
+	}
+
+	router := gin.New()
+	router.Use(gin.Recovery())
+	router.Use(middlewares.Set(utils.Config, tomlConfig))
+	router.Use(middlewares.Mysql(utils.UserDB, tomlConfig))
+
+	//router := gin.Default()
 	router.GET("/printdata", webServices.PrintData)
 	//http.HandleFunc("/printdata", webServices.PrintData)
 
@@ -24,5 +48,7 @@ func main() {
 	//if err != nil {
 	//	log.Fatal("ListenAndServe: ", err)
 	//}
-	router.Run(":9090")
+	if err := router.Run(tomlConfig.GetListenAddr()); err != nil {
+		log.Fatalf("run err:%v\n", err)
+	}
 }

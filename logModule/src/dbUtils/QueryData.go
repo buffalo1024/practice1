@@ -1,19 +1,17 @@
 package dbUtils
 
 import (
-	"database/sql"
+	"github.com/jmoiron/sqlx"
 )
 
 type User struct {
-	Username string
-	Password string
+	Username string `db:"username" json:"name"`
+	Password string `db:"password" json:"password"`
 }
 
-
-
-func QueryData(DB *sql.DB) []User{
+func QueryData(db *sqlx.DB) []User{
 	users := make([]User,0)
-	rows, _ := DB.Query("select * from users")
+	rows, _ := db.Query("select * from users")
 	defer rows.Close()
 	var username,pwd string
 	for rows.Next() {

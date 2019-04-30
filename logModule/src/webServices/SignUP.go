@@ -2,7 +2,9 @@ package webServices
 
 import (
 	"../dbUtils"
+	"../utils"
 	"github.com/gin-gonic/gin"
+	"github.com/jmoiron/sqlx"
 )
 
 func SignUp(c *gin.Context)  {
@@ -13,5 +15,9 @@ func SignUp(c *gin.Context)  {
 	var user dbUtils.User
 	user.Username = username
 	user.Password = password
-	dbUtils.InsertUser(user)
+	userdb := c.MustGet(utils.UserDB).(*sqlx.DB)
+	if err := dbUtils.InsertUser(userdb, user); err != nil {
+		// 错误处理
+	}
+	// 正常
 }

@@ -1,13 +1,20 @@
 package dbUtils
 
-func QueryPassword(username string) string {
-	DB := InitDB()
-	row, _ := DB.Query("select password from users where username=?",username)
+import (
+	"github.com/jmoiron/sqlx"
+)
+
+func QueryPassword(db *sqlx.DB, username string) (string,error) {
+	//DB := InitDB()
+	//row, _ := DB.Query("select password from users where username=?",username)
+	//var pwd string
+	//for row.Next() {
+	//	row.Scan(&pwd)
+	//}
+	//return pwd
+
+	psql := "select password from users where username =  ? "
 	var pwd string
-	for row.Next() {
-		row.Scan(&pwd)
-	}
-	//row.Scan(&pwd)
-	//fmt.Println(pwd)
-	return pwd
+	err := db.Get(&pwd, psql, username)
+	return pwd,err
 }

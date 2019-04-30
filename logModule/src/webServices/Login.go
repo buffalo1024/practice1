@@ -2,11 +2,24 @@ package webServices
 
 import (
 	"../dbUtils"
+	"../utils"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/jmoiron/sqlx"
 )
 
+type LoginParams struct {
+	Username string `form:"username" json:"username" binding:"required"`
+	Password string `form:"password" json:"password" binding:"required"`
+}
+
 func Login(c *gin.Context) {
+	var req LoginParams
+	if err := c.ShouldBind(&req); err != nil {
+		// 绑定出错
+		return
+	}
+	// 绑定成功
 	r := c.Request
 	w := c.Writer
 	r.ParseForm()
@@ -26,9 +39,12 @@ func Login(c *gin.Context) {
 	//fmt.Println("requesturi: ", r.RequestURI)
 	//fmt.Println("username: ", r.Form["username"])
 	//fmt.Println("password: ", r.Form["password"])
-	var username string
-	username = r.Form["username"][0]
 	//fmt.Println(r.Form["password"][0]==dbUtils.QueryPassword(username))
-	success := fmt.Sprintf("%v", r.Form["password"][0]==dbUtils.QueryPassword(username))
+	userdb := c.MustGet(utils.UserDB).(*sqlx.DB)
+	password,err := dbUtils.QueryPassword(userdb, req.Username)
+	if err != nil {
+		// 错误处理
+	}
+	success := fmt.Sprintf("%v", req.Password==password)
 	w.Write([]byte(success))
 }
