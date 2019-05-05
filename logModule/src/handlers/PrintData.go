@@ -1,7 +1,7 @@
-package webServices
+package handlers
 
 import (
-	"../dbUtils"
+	"../models"
 	"../utils"
 	"database/sql"
 	"fmt"
@@ -11,13 +11,11 @@ import (
 )
 
 var DB *sql.DB
-var users []dbUtils.User
+var users []models.User
 
 func PrintData(c *gin.Context)  {
-	//DB = dbUtils.InitDB()
-	//defer DB.Close()
 	userdb := c.MustGet(utils.UserDB).(*sqlx.DB)
-	users = dbUtils.QueryData(userdb)
+	users = models.QueryData(userdb)
 	for _, user := range users {
 		s := []string{"username: ",user.Username, " ,password: ",user.Password,"\n"}
 		fmt.Fprintf(c.Writer,strings.Join(s,""))

@@ -10,7 +10,7 @@ import (
 func Mysql(dbName string, tomlConfig *config.Config) gin.HandlerFunc {
 	dbConfig, ok := tomlConfig.DBServerConf(dbName)
 	if !ok {
-		panic(fmt.Sprintf("Postgres: %v no set.", dbName))
+		panic(fmt.Sprintf("Mysql: %v no set.", dbName))
 	}
 
 	db, err := sqlx.Open("mysql", dbConfig.ConnectString())
