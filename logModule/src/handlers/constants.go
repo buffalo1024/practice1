@@ -1,4 +1,4 @@
-package utils
+package handlers
 
 const (
 	Config = "config"

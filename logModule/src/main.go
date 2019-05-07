@@ -4,7 +4,6 @@ import (
 	"./config"
 	"./handlers"
 	"./middlewares"
-	"./utils"
 	"flag"
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
@@ -29,8 +28,8 @@ func main() {
 
 	router := gin.New()
 	router.Use(gin.Recovery())
-	router.Use(middlewares.Set(utils.Config, tomlConfig))
-	router.Use(middlewares.Mysql(utils.UserDB, tomlConfig))
+	router.Use(middlewares.Set(handlers.Config, tomlConfig))
+	router.Use(middlewares.Mysql(handlers.UserDB, tomlConfig))
 
 	router.GET("/printdata", handlers.PrintData)
 	router.GET("/", handlers.Login)

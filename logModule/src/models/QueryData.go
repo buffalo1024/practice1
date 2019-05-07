@@ -9,20 +9,8 @@ type User struct {
 	Password string `db:"password" json:"password"`
 }
 
-func QueryData(db *sqlx.DB) []User{
+func QueryData(db *sqlx.DB) ([]User,error){
 	users := make([]User,0)
-
-	//rows, _ := db.Query("select * from users")
-	//defer rows.Close()
-	//var username,pwd string
-	//for rows.Next() {
-	//	rows.Scan(&username,&pwd)
-	//	var u User
-	//	u.Username = username
-	//	u.Password = pwd
-	//	users = append(users, u)
-	//}
-
-	db.Select(&users,"select * from users")
-	return users
+	err := db.Select(&users,"select * from users")
+	return users,err
 }
